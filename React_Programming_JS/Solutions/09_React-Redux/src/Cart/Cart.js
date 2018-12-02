@@ -1,0 +1,47 @@
+// cart.js
+// Copyright © NextStep IT Training. All rights reserved.
+//
+// Return a singleton shopping cart for the application facets to share.
+//
+
+class Cart {
+
+    constructor(source) {
+
+        this.entries = (source instanceof Cart) ? [ ...source.entries ] : []
+    }
+
+    add(entry) {
+
+        this.entries.push(entry)
+    }
+
+    remove(entry) {
+
+        let index = this.entries.indexOf(entry)
+
+        if (index >= 0) {
+
+            this.entries.splice(index, 1)
+        }
+    }
+
+    clear() {
+
+        this.entries = []
+    }
+
+    total() {
+
+        let sum = 0
+
+        for (let entry of this.entries) {
+
+            sum += entry.price
+        }
+
+        return sum
+    }
+}
+
+export default Cart
