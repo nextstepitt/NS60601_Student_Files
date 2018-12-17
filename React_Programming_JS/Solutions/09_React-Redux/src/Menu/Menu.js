@@ -4,15 +4,17 @@
 // Cafe menu view.
 //
 
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
-import CartEntry from '../Cart/CartEntry'
-import CartList from '../Checkout/CartList'
-import CartActionCreator from "../Model/CartActionCreator";
-import ProductActionCreator from "../Model/ProductActionCreator";
+import '../assets/styles/application.css'
+import CartActionController from '../cart/CartActionController'
+import CartEntry from '../cart/CartEntry'
+import CartList from '../checkout/CartList'
+import Product from '../data-access/Product'
+import ProductActionController from '../data-access/ProductActionController'
 import ProductList from './ProductList'
 
 class Menu extends Component {
@@ -51,24 +53,25 @@ class Menu extends Component {
 
     commitAddToCart() {
 
-        this.props.cartData.addCartEntry(new CartEntry({ name: this.state.item.name, price: this.state.item.price, instructions: this.state.specialInstructions }))
-        this.setState({ showSpecialInstructions: false, specialInstructions: '' })
+        if (this.props.cartActionController && this.state.item) {
+
+            this.props.cartActionController.addCartEntry(new CartEntry({ name: this.state.item.name, price: this.state.item.price, instructions: this.state.specialInstructions }))
+            this.setState({ showSpecialInstructions: false, specialInstructions: '' })
+        }
     }
 
     componentDidMount() {
 
-        this.props.productData.getBeverages()
-        this.props.productData.getPastries()
+        this.props.productActionController && this.props.productActionController.getBeverages();
+        this.props.productActionController && this.props.productActionController.getPastries();
     }
 
     static mapStateToProps(state, ownProps) {
 
         return {
 
-            beverages: state.product.beverages,
-            beveragesError: state.product.beveragesError,
-            pastries: state.product.pastries,
-            pastriesError: state.product.pastriesError,
+            beverages: state.products.beverages,
+            pastries: state.products.pastries,
             cart: state.cart
         }
     }
@@ -77,8 +80,19 @@ class Menu extends Component {
 
         return {
 
-            cartData: new CartActionCreator(dispatch),
-            productData: new ProductActionCreator(dispatch)
+            cartActionController: new CartActionController(dispatch),
+            productActionController: new ProductActionController(dispatch)
+        }
+    }
+
+    static get propTypes() {
+
+        return {
+
+            cartActionController: PropTypes.instanceOf(CartActionController),
+            beverages: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
+            pastries: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
+            productActionController: PropTypes.instanceOf(ProductActionController)
         }
     }
 
@@ -96,8 +110,8 @@ class Menu extends Component {
                     </div>
                 </div>
                 <h1>Menu</h1>
-                <ProductList title="Beverages" products={ this.props.beverages } error={ this.props.beveragesError } addToCart={ this.addToCart } />
-                <ProductList title="Pastries" products={ this.props.pastries } error={ this.props.pastriesError } addToCart={ this.addToCart } />
+                <ProductList id="beverages" title="Beverages" products={ this.props.beverages } error={ this.props.beveragesError } addToCart={ this.addToCart } />
+                <ProductList id="pastries" title="Pastries" products={ this.props.pastries } error={ this.props.pastriesError } addToCart={ this.addToCart } />
                 <h2>Cart</h2>
                 <CartList cart={ this.props.cart } cartData={ this.props.cartData } />
                 { this.props.cart.entries.length ? <Link to="/checkout"><button>Checkout</button></Link> : null }

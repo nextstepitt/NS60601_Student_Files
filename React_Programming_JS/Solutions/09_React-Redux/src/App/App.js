@@ -5,19 +5,26 @@
 //
 
 import React, { Component } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
+import '../assets/styles/application.css'
+import ApplicationModelStoreController from '../model/ApplicationModelStoreController'
 import Main from './Main'
-import model from '../Model/model'
 
 class App extends Component {
+
+    constructor(props) {
+    
+        super(props)
+
+        this.applicationModelStoreController = new ApplicationModelStoreController()
+    }
 
     render() {
 
         return (
-            <Provider store={ model.store }>
+            <Provider store={ this.applicationModelStoreController.store }>
                 <Router>
                     <Main />
                 </Router>

@@ -6,11 +6,10 @@
 
 import React, { Component } from 'react'
 
-import Footer from '../Boilerplate/Footer'
-import Header from '../Boilerplate/Header'
-import Landing from '../Landing/Landing'
-
-import '../Assets/styles/application.css'
+import '../assets/styles/application.css'
+import Footer from '../common/Footer'
+import Header from '../common/Header'
+import Landing from '../landing/Landing'
 
 class App extends Component {
 

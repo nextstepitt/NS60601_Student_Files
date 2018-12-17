@@ -198,5 +198,4 @@ class DataContext {
     }
 }
 
-let dataContext = new DataContext()
-export default dataContext 
+export default (new DataContext())

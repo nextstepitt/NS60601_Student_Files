@@ -5,9 +5,9 @@
 import React, { Component } from 'react' 
 import { Route, Switch } from 'react-router'
 
-import Checkout from '../Checkout/Checkout'
-import Landing from '../Landing/Landing'
-import Menu from '../Menu/Menu'
+import Checkout from '../checkout/Checkout'
+import Landing from '../landing/Landing'
+import Menu from '../menu/Menu'
 
 class Routes extends Component {
 

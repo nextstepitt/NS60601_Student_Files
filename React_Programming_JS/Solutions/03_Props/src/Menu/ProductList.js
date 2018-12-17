@@ -5,11 +5,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import '../Assets/styles/application.css'
-import Product from '../Data-Access/Product'
+import '../assets/styles/application.css'
+import Product from '../data-access/Product'
 import ProductItem from './ProductItem'
 
-export default class ProductList extends Component {
+class ProductList extends Component {
 
     static get propTypes() {
 
@@ -42,3 +42,5 @@ export default class ProductList extends Component {
         )
     }
 }
+
+export default ProductList

@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react'
 
-import '../Assets/styles/application.css'
+import '../assets/styles/application.css'
 
 class Landing extends Component {
 

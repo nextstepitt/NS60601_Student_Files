@@ -7,11 +7,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
-import cart from '../Cart/cart'
-import CartEntry from '../Cart/CartEntry'
-import CartList from '../Checkout/CartList'
-import dataContext from '../Data-Access/dataContext'
+import '../assets/styles/application.css'
+import cart from '../cart/cart'
+import CartEntry from '../cart/CartEntry'
+import CartList from '../checkout/CartList'
+import dataContext from '../data-access/dataContext'
 import ProductList from './ProductList'
 
 class Menu extends Component {
@@ -28,21 +28,11 @@ class Menu extends Component {
         this.state = {
 
             beverages: [],
-            beveragesError: false,
             item: null,
             pastries: [],
-            pastriesError: false,
             showSpecialInstructions: false,
             specialInstructions: ''
         }
-
-        dataContext.beverageContext.getBeverages()
-            .then( beverages => this.setState({ beverages: beverages, beveragesError: false }) )
-            .catch( error => { console.log(error); this.setState({ pastries: [], beveragesError: true }) } )
-
-        dataContext.pastryContext.getPastries()
-            .then( pastries => this.setState({ pastries: pastries, pastriesError: false }) )
-            .catch( error => { console.log(error); this.setState({ pastries: [], pastriesError: true }) } )
     }
 
     addToCart(item) {
@@ -66,6 +56,46 @@ class Menu extends Component {
         this.setState({ showSpecialInstructions: false, specialInstructions: '' })
     }
 
+    componentDidMount() {
+
+        this.getBeverages()
+        this.getPastries()
+    }
+
+    async getBeverages() {
+
+        try {
+        
+            const receivedBeverages = await dataContext.beverageContext.getBeverages()
+
+            this.setState({ beverages: receivedBeverages })
+        }
+
+        catch (error) {
+
+            console.log(error)
+
+            this.setState({ pastries: [] })
+        }
+    }
+
+    async getPastries() {
+
+        try {
+        
+            const receivedPastries = await dataContext.pastryContext.getPastries()
+            
+            this.setState({ pastries: receivedPastries })
+        }
+
+        catch (error) {
+
+            console.log(error)
+
+            this.setState({ pastries: [] })
+        }
+    }
+
     render() {
 
         return (
@@ -80,8 +110,8 @@ class Menu extends Component {
                     </div>
                 </div>
                 <h1>Menu</h1>
-                <ProductList title="Beverages" products={ this.state.beverages } error={ this.state.beveragesError } addToCart={ this.addToCart } />
-                <ProductList title="Pastries" products={ this.state.pastries } error={ this.state.pastriesError } addToCart={ this.addToCart } />
+                <ProductList title="Beverages" products={ this.state.beverages } addToCart={ this.addToCart } />
+                <ProductList title="Pastries" products={ this.state.pastries } addToCart={ this.addToCart } />
                 <h2>Cart</h2>
                 <CartList />
                 { cart.entries.length ? <Link to="/checkout"><button>Checkout</button></Link> : null }

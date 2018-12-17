@@ -5,10 +5,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-import '../Assets/styles/application.css'
-import Product from '../Data-Access/Product'
+import '../assets/styles/application.css'
+import Product from '../data-access/Product'
 
-export default class ProductItem extends Component {
+class ProductItem extends Component {
 
     static get propTypes() {
 
@@ -24,9 +24,11 @@ export default class ProductItem extends Component {
         return (
             <tr>
                 <td className="list-name">{this.props.product.name}</td>
-                <td className="list-price">${this.props.product.price}</td>
+                <td className="list-price">${this.props.product.price.toFixed(2)}</td>
                 <td className="list-add-button"><button onClick={ () => this.props.addToCart(this.props.product) }>Add to cart</button></td>
             </tr>
         )
     }
 }
+
+export default ProductItem

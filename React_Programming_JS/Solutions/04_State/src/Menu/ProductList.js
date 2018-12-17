@@ -5,11 +5,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-import '../Assets/styles/application.css'
-import Product from '../Data-Access/Product'
+import '../assets/styles/application.css'
+import Product from '../data-access/Product'
 import ProductItem from './ProductItem';
 
-export default class ProductList extends Component {
+class ProductList extends Component {
 
     static get defaultProps() {
 
@@ -23,9 +23,8 @@ export default class ProductList extends Component {
 
         return {
 
-            error: PropTypes.bool,
-            title: PropTypes.string.isRequired,
-            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired
+            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired,
+            title: PropTypes.string.isRequired
         }
     }
 
@@ -33,9 +32,9 @@ export default class ProductList extends Component {
 
         let content = null
 
-        if (this.props.error) {
+        if (!this.props.products || this.props.products.length === 0) {
 
-            content = <span className="error">The list cannot be loaded.</span>
+            content = <span className="error">The list is not loaded.</span>
         
         } else {
 
@@ -46,7 +45,7 @@ export default class ProductList extends Component {
                     <thead>
                         <tr>
                             <th className="list-name"></th>
-                            <th className="list-price">price</th>
+                            <th className="list-price">Price</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,3 +63,5 @@ export default class ProductList extends Component {
         )
     }
 }
+
+export default ProductList

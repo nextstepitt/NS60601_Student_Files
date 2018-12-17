@@ -5,11 +5,10 @@
 
 import React, { Component } from 'react'
 
-import Footer from '../Boilerplate/Footer'
-import Header from '../Boilerplate/Header'
-import Menu from '../Menu/Menu'
-
 import '../Assets/styles/application.css'
+import Footer from '../common/Footer'
+import Header from '../common/Header'
+import Menu from '../menu/Menu'
 
 class App extends Component {
 

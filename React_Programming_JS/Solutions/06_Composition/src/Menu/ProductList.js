@@ -5,12 +5,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-import '../Assets/styles/application.css'
-import AccordionList from '../Common/AccordionList'
-import Product from '../Data-Access/Product'
+import '../assets/styles/application.css'
+import AccordionComponent from '../common/AccordionComponent'
+import Product from '../data-access/Product'
 import ProductItem from './ProductItem';
 
-export default class ProductList extends Component {
+class ProductList extends Component {
 
     static get defaultProps() {
 
@@ -24,9 +24,8 @@ export default class ProductList extends Component {
 
         return {
 
-            error: PropTypes.bool,
-            title: PropTypes.string.isRequired,
-            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired
+            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired,
+            title: PropTypes.string.isRequired
         }
     }
 
@@ -34,9 +33,9 @@ export default class ProductList extends Component {
 
         let content = null
 
-        if (this.props.error) {
+        if (!this.props.products || this.props.products.length === 0) {
 
-            content = <span className="error">The list cannot be loaded.</span>
+            content = <span className="error">The list is not loaded.</span>
         
         } else {
 
@@ -47,7 +46,7 @@ export default class ProductList extends Component {
                     <tbody>
                         <tr>
                             <th className="list-name"></th>
-                            <th className="list-price">price</th>
+                            <th className="list-price">Price</th>
                         </tr>
                         { productItems }
                     </tbody>
@@ -56,9 +55,11 @@ export default class ProductList extends Component {
         }
 
         return (
-            <AccordionList title={ this.props.title } open={ false }>
+            <AccordionComponent title={ this.props.title } open={ false }>
                 { content }
-            </AccordionList>
+            </AccordionComponent>
         )
     }
 }
+
+export default ProductList

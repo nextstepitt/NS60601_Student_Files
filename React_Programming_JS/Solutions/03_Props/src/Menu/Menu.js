@@ -6,9 +6,9 @@
 
 import React, { Component } from 'react'
 
-import '../Assets/styles/application.css'
-import Product from '../Data-Access/Product'
-import ProductList from './ProductList'
+import '../assets/styles/application.css'
+import Product from '../data-access/Product'
+import ProductList from './productList'
 
 class Menu extends Component {
 

@@ -2,14 +2,16 @@
 // Copyright (c) 2017-2018 NextStep IT Training. All rights reserved.
 //
 
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Validator from 'react-data-validator'
-import { connect } from "react-redux";
+import { connect } from 'react-redux'
+import Validator, { cardNumberValidator } from 'react-data-validator'
 import { Link, withRouter } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
+import '../assets/styles/application.css'
+import CartActionController from '../cart/CartActionController'
+import CartModelState from '../cart/CartModelState'
 import CartList from './CartList'
-import CartActionCreator from "../Model/CartActionCreator";
 
 class Checkout extends Component {
 
@@ -17,20 +19,34 @@ class Checkout extends Component {
 
         super(props)
 
-        this.onCardNumberInvalid = this.onCardNumberInvalid.bind(this)
         this.onChangeCardNumber = this.onChangeCardNumber.bind(this)
         this.onChangeName = this.onChangeName.bind(this)
-        this.onNameInvalid = this.onNameInvalid.bind(this)
+        this.setCardNumberValidationState = this.setCardNumberValidationState.bind(this)
+        this.setNameValidationState = this.setNameValidationState.bind(this)
 
         this.state = {
 
-            name: '',
-            nameIsValid: true,
             cardNumber: '',
-            cardNumberIsValid: true
+            cardNumberIsValid: true,
+            name: '',
+            nameIsValid: true
+        }
+    }
+
+    checkout(props) {
+
+        if (this.isValid()) {
+
+            this.props.cartActionController && this.props.cartActionController.clearCart();
+            props.history.push("/Menu")
         }
 
-        this.checkout = this.checkout.bind(this)
+        this.setState({ error: true })
+    }
+
+    isValid() {
+
+        return this.state.cardNumberIsValid && this.state.nameIsValid
     }
 
     static mapStateToProps(state) {
@@ -45,24 +61,41 @@ class Checkout extends Component {
 
         return {
 
-            cartData: new CartActionCreator(dispatch)
+            cartActionController: new CartActionController(dispatch)
+        }
+    }
+
+
+    onChangeCardNumber(event) {
+
+        this.setState({ cardNumber: event.target.value })
+    }
+
+    onChangeName(event) {
+
+        this.setState({ name: event.target.value })
+    }
+
+    static get propTypes() {
+
+        return {
+
+            cart: PropTypes.instanceOf(CartModelState),
+            cartActionController: PropTypes.instanceOf(CartActionController)
         }
     }
 
     render() {
 
-        this.cardNumberIsValid = true
-        this.nameIsValid = true
-
-        let SubmitButton = this.props.cart.entries.length && this.isValid() ? withRouter( (props) => <input type="button" value="Submit" onClick={ () => this.checkout(props) } /> ) : () => null
+        let SubmitButton = this.props.cart && this.props.cart.entries.length && this.isValid() ? withRouter( (props) => <input type="button" value="Submit" onClick={ () => this.checkout(props) } /> ) : () => null
 
         return (
             <div>
                 <h1>Checkout</h1>
-                <CartList cart={ this.props.cart } cartData={ this.props.cartData } />
+                <CartList />
                 <form>
-                    <Validator className="cc-form-errors" value={ this.state.name } isRequired={ true } renderOnEmpty={ true } constraint={ /^[A-Za-z][a-z]+( [A-Za-z]\.?)? [A-Za-z][a-z]+/ } notify={ this.onNameInvalid }>Provide a first and last name with initial capital letters, an uppercase middle intitial is permitted.</Validator><br />
-                    <Validator className="cc-form-errors" value={ this.state.cardNumber } isRequired={ true } renderOnEmpty={ true } constraint={ /^\d{12,19}$/ } notify={ this.onCardNumberInvalid }>Please enter a valid card number.</Validator><br />
+                    <Validator className="cc-form-errors" value={ this.state.name } isRequired={ true } renderOnEmpty={ true } constraint={ /^[A-Za-z][a-z]+( [A-Za-z]\.?)? [A-Za-z][a-z]+/ } currentState={ this.state.nameIsValid } notify={ this.setNameValidationState }>Provide a first and last name with initial capital letters, an uppercase middle intitial is permitted.</Validator><br />
+                    <Validator className="cc-form-errors" value={ this.state.cardNumber } isRequired={ true } renderOnEmpty={ true } constraint={ [ /^\d{12,19}$/, cardNumberValidator ] } currentState={ this.state.cardNumberIsValid } notify={ this.setCardNumberValidationState }>Please enter a valid card number.</Validator><br />
                     <div className="cc-form">
                         <div className="cc-form-row">
                             <div className="cc-form-label"><label className="cc-form-label">Name:</label></div>
@@ -88,66 +121,22 @@ class Checkout extends Component {
         )
     }
 
-    checkout(props) {
+    setCardNumberValidationState(valid) {
 
-        if (this.isValid()) {
+        if (this.state.CardNumberIsValid !== valid) {
 
-            this.props.cartData.clearOrder()
-            props.history.push("/Menu")
+            this.setState( { cardNumberIsValid: valid })
         }
 
-        // Dummy setProps to trigger rendering.
-
-        this.setState({ error: true })
     }
 
-    componentDidMount() {
+    setNameValidationState(valid) {
 
-        this.setValidState()
-    }
+        if (this.state.NameIsValid !== valid) {
 
-    componentDidUpdate() {
-
-        this.setValidState()
-    }
-
-    isValid() {
-
-        return this.state.cardNumberIsValid && this.state.nameIsValid
-    }
-
-    onCardNumberInvalid() {
-
-        this.cardNumberIsValid = false
-    }
-
-    onChangeCardNumber(event) {
-
-        this.setState({ cardNumber: event.target.value })
-    }
-
-    onChangeName(event) {
-
-        this.setState({ name: event.target.value })
-    }
-
-    onNameInvalid() {
-
-        this.nameIsValid = false
-    }
-
-    setValidState() {
-
-        if (this.state.cardNumberIsValid !== this.cardNumberIsValid ||
-            this.state.nameIsValid !== this.nameIsValid) {
-
-            this.setState({
-                cardNumberIsValid: this.cardNumberIsValid,
-                nameIsValid: this.nameIsValid
-            })
+            this.setState( { nameIsValid: valid })
         }
     }
 }
 
-// export default Checkout
 export default connect(Checkout.mapStateToProps, Checkout.mapDispatchToProps)(Checkout)

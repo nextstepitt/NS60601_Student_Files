@@ -1,18 +1,12 @@
 // CartList.js
 //
 // Show the shopping cart contents.
+//
 
 import React, { Component } from 'react'
-import cart from '../Cart/cart'
+import cart from '../cart/cart'
 
-export default class CartList extends Component {
-
-    constructor(props) {
-
-        super(props)
-
-        this.remove = this.remove.bind(this)
-    }
+class CartList extends Component {
 
     render() {
 
@@ -29,12 +23,20 @@ export default class CartList extends Component {
 
             let total = ( <tr key="total">
                                 <td className="cart-name"></td>
-                                <td className="cart-price">{ cart.total() }</td>
+                                <td className="cart-price">Total: ${ cart.total().toFixed(2) }</td>
                                 <td className="cart-remove-button"></td>
                                 <td className="cart-instructions"></td>
                             </tr> )
 
             result = <table className="cart">
+                            <thead>
+                                <tr>
+                                    <th className="cart-name">Product</th>
+                                    <th className="cart-price">Price</th>
+                                    <th className="cart-remove-button">&nbsp;</th>
+                                    <th className="cart-instructions">Special Instructions</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 { items }
                                 { total }
@@ -47,10 +49,12 @@ export default class CartList extends Component {
 
     remove(entry) {
 
-        cart.remove(entry)
+        cart.delete(entry)
         
         // State must change to update the view, so a dummy entry.
 
         this.setState({ dummy: null })
     }
 }
+
+export default CartList

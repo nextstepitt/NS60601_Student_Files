@@ -16,7 +16,7 @@ class Cart {
         this.entries.push(entry)
     }
 
-    remove(entry) {
+    delete(entry) {
 
         let index = this.entries.indexOf(entry)
 
@@ -44,6 +44,4 @@ class Cart {
     }
 }
 
-const cart = new Cart()
-
-export default cart
+export default (new Cart())

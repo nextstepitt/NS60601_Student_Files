@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
+import '../assets/styles/application.css'
 import Main from './Main'
 
 class App extends Component {

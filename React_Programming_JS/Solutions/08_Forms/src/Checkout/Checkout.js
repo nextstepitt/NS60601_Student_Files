@@ -3,11 +3,11 @@
 //
 
 import React, { Component } from 'react'
-import Validator from 'react-data-validator'
+import Validator, { cardNumberValidator } from 'react-data-validator'
 import { Link, withRouter } from 'react-router-dom'
 
-import '../Assets/styles/application.css'
-import cart from '../Cart/cart'
+import '../assets/styles/application.css'
+import cart from '../cart/cart'
 import CartList from './CartList'
 
 class Checkout extends Component {
@@ -16,10 +16,10 @@ class Checkout extends Component {
 
         super(props)
 
-        this.onCardNumberInvalid = this.onCardNumberInvalid.bind(this)
         this.onChangeCardNumber = this.onChangeCardNumber.bind(this)
         this.onChangeName = this.onChangeName.bind(this)
-        this.onNameInvalid = this.onNameInvalid.bind(this)
+        this.setCardNumberValidationState = this.setCardNumberValidationState.bind(this)
+        this.setNameValidationState = this.setNameValidationState.bind(this)
 
         this.state = {
 
@@ -28,14 +28,33 @@ class Checkout extends Component {
             cardNumber: '',
             cardNumberIsValid: true
         }
+    }
 
-        this.checkout = this.checkout.bind(this)
+    checkout(props) {
+
+        if (this.isValid()) {
+
+            cart.clear()
+            props.history.push("/Menu")
+        }
+    }
+
+    isValid() {
+
+        return this.state.cardNumberIsValid && this.state.nameIsValid
+    }
+
+    onChangeCardNumber(event) {
+
+        this.setState({ cardNumber: event.target.value })
+    }
+
+    onChangeName(event) {
+
+        this.setState({ name: event.target.value })
     }
 
     render() {
-
-        this.cardNumberIsValid = true
-        this.nameIsValid = true
 
         let SubmitButton = cart.entries.length && this.isValid() ? withRouter( (props) => <input type="button" value="Submit" onClick={ () => this.checkout(props) } /> ) : () => null
 
@@ -44,8 +63,8 @@ class Checkout extends Component {
                 <h1>Checkout</h1>
                 <CartList />
                 <form>
-                    <Validator className="cc-form-errors" value={ this.state.name } isRequired={ true } renderOnEmpty={ true } constraint={ /^[A-Za-z][a-z]+( [A-Za-z]\.?)? [A-Za-z][a-z]+/ } notify={ this.onNameInvalid }>Provide a first and last name with initial capital letters, an uppercase middle intitial is permitted.</Validator><br />
-                    <Validator className="cc-form-errors" value={ this.state.cardNumber } isRequired={ true } renderOnEmpty={ true } constraint={ /^\d{12,19}$/ } notify={ this.onCardNumberInvalid }>Please enter a valid card number.</Validator><br />
+                    <Validator className="cc-form-errors" value={ this.state.name } isRequired={ true } renderOnEmpty={ true } constraint={ /^[A-Za-z][a-z]+( [A-Za-z]\.?)? [A-Za-z][a-z]+/ } currentState={ this.state.nameIsValid } notify={ this.setNameValidationState }>Provide a first and last name with initial capital letters, an uppercase middle intitial is permitted.</Validator><br />
+                    <Validator className="cc-form-errors" value={ this.state.cardNumber } isRequired={ true } renderOnEmpty={ true } constraint={ [ /^\d{12,19}$/, cardNumberValidator ] } currentState={ this.state.cardNumberIsValid } notify={ this.setCardNumberValidationState }>Please enter a valid card number.</Validator><br />
                     <div className="cc-form">
                         <div className="cc-form-row">
                             <div className="cc-form-label"><label className="cc-form-label">Name:</label></div>
@@ -71,63 +90,23 @@ class Checkout extends Component {
         )
     }
 
-    checkout(props) {
+    setCardNumberValidationState(valid) {
 
-        if (this.isValid()) {
+        if (this.state.cardNumberIsValid !== valid) {
 
-            cart.clear()
-            props.history.push("/Menu")
+            this.setState( { cardNumberIsValid: valid })
         }
 
-        this.setState({ error: true })
     }
 
-    componentDidMount() {
+    setNameValidationState(valid) {
 
-        this.setValidState()
-    }
+        if (this.state.NameIsValid !== valid) {
 
-    componentDidUpdate() {
-
-        this.setValidState()
-    }
-
-    isValid() {
-
-        return this.state.cardNumberIsValid && this.state.nameIsValid
-    }
-
-    onCardNumberInvalid() {
-
-        this.cardNumberIsValid = false
-    }
-
-    onChangeCardNumber(event) {
-
-        this.setState({ cardNumber: event.target.value })
-    }
-
-    onChangeName(event) {
-
-        this.setState({ name: event.target.value })
-    }
-
-    onNameInvalid() {
-
-        this.nameIsValid = false
-    }
-
-    setValidState() {
-
-        if (this.state.cardNumberIsValid !== this.cardNumberIsValid ||
-            this.state.nameIsValid !== this.nameIsValid) {
-
-            this.setState({
-                cardNumberIsValid: this.cardNumberIsValid,
-                nameIsValid: this.nameIsValid
-            })
+            this.setState( { nameIsValid: valid })
         }
     }
+
 }
 
 export default Checkout

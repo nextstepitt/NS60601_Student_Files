@@ -4,8 +4,8 @@
 
 import React, { Component } from 'react' 
 
-import Footer from '../Boilerplate/Footer'
-import Header from '../Boilerplate/Header'
+import Footer from '../common/Footer'
+import Header from '../common/Header'
 import Navigation from './Navigation'
 import Routes from './Routes'
 
@@ -24,6 +24,6 @@ class Main extends Component {
             </div>
         )
     }
-X}
+}
 
 export default Main

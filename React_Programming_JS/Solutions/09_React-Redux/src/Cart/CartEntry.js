@@ -4,7 +4,7 @@
 // An entry in the shopping cart. The price could be different, or there could be special instructions.
 //
 
-export default class CartEntry {
+class CartEntry {
 
     constructor(source) {
 
@@ -14,3 +14,5 @@ export default class CartEntry {
         this.instructions = source && source.instructions ? source.instructions : null
     }
 }
+
+export default CartEntry

@@ -11,28 +11,47 @@ class Navigation extends Component {
 		
 		super(props)
 
+		this.createNavigationBar = this.createNavigationBar.bind(this)
 		this.pushCheckout = this.pushCheckout.bind(this)
 		this.pushHome = this.pushHome.bind(this)
 		this.pushMenu = this.pushMenu.bind(this)
 		
-		this.NavWithRouter = withRouter((props) => {
+		this.NavWithRouter = withRouter(this.createNavigationBar)
+	}
 
-			this.history = props.history
+	createNavigationBar(props) {
 
-			return (
-				<div className="navigation">
-					<button className={ `${ props.location.pathname === '/' ? 'navbutton-selected' : 'navbutton' }` }
-						onClick={ this.pushHome }>Home</button>
-					<button className={ `${ props.location.pathname === '/menu' ? 'navbutton-selected' : 'navbutton' }` }
-						onClick={ this.pushMenu }>Menu</button>
-					<button className={ `${ props.location.pathname === '/checkout' ? 'navbutton-selected' : 'navbutton' }` }
-						onClick={ this.pushCheckout }>Checkout</button>
-				</div>
-			)
-		})
+		this.history = props.history
+
+		return (
+			<div className="navigation">
+				<button className={ `${ props.location.pathname === '/' ? 'navbutton-selected' : 'navbutton' }` }
+					onClick={ this.pushHome }>Home</button>
+				<button className={ `${ props.location.pathname === '/menu' ? 'navbutton-selected' : 'navbutton' }` }
+					onClick={ this.pushMenu }>Menu</button>
+				<button className={ `${ props.location.pathname === '/checkout' ? 'navbutton-selected' : 'navbutton' }` }
+					onClick={ this.pushCheckout }>Checkout</button>
+			</div>
+		)
+
+		// Alternative form using Link instead of history and calling onClick. This is probably what we would have gone
+		// with in a read application:
+
+		/*
+		return (
+			<div className="navigation">
+				<Link to="/"><button className={ `${ props.location.pathname === '/' ? 'navbutton-selected' : 'navbutton' }` }>Home</button></Link>
+				<Link to="/menu"<button className={ `${ props.location.pathname === '/menu' ? 'navbutton-selected' : 'navbutton' }` }>Menu</button></Link>
+				<Link to="/checkout"><button className={ `${ props.location.pathname === '/checkout' ? 'navbutton-selected' : 'navbutton' }` }>Checkout</button></Link>
+			</div>
+		)
+		*/
 	}
 
     render() {
+
+		// NavWithRouter is assigned to a local variable because this.NavWithRouter is not acceptable
+		// as a tag name in JSX.
 
 		const NavWithRouter = this.NavWithRouter
 

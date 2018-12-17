@@ -5,12 +5,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-import '../Assets/styles/application.css'
-import AccordionList from '../Common/AccordionList'
-import Product from '../Data-Access/Product'
+import '../assets/styles/application.css'
+import AccordionComponent from '../common/AccordionComponent'
+import Product from '../data-access/Product'
 import ProductItem from './ProductItem';
 
-export default class ProductList extends Component {
+class ProductList extends Component {
 
     static get defaultProps() {
 
@@ -25,9 +25,8 @@ export default class ProductList extends Component {
         return {
 
             addToCart: PropTypes.func.isRequired,
-            error: PropTypes.bool,
-            title: PropTypes.string.isRequired,
-            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired
+            products: PropTypes.arrayOf(PropTypes.instanceOf(Product)).isRequired,
+            title: PropTypes.string.isRequired
         }
     }
 
@@ -48,7 +47,7 @@ export default class ProductList extends Component {
                     <tbody>
                         <tr>
                             <th className="list-name"></th>
-                            <th className="list-price">price</th>
+                            <th className="list-price">Price</th>
                             <th className="list-add-button"></th>
                         </tr>
                         { productItems }
@@ -58,9 +57,11 @@ export default class ProductList extends Component {
         }
 
         return (
-            <AccordionList title={ this.props.title } open={ false }>
+            <AccordionComponent title={ this.props.title } open={ false }>
                 { content }
-            </AccordionList>
+            </AccordionComponent>
         )
     }
 }
+
+export default ProductList

@@ -10,34 +10,4 @@ export default class Product {
         this.name = source && source.name ? source.name : ''
         this.price = source && source.price ? source.price : 0
     }
-
-    get id() {
-
-        return this._id
-    }
-
-    set id(value) {
-
-        this._id = value
-    }
-
-    get name() {
-
-        return this._name
-    }
-
-    set name(value) {
-
-        this._name = value
-    }
-    
-    get price() {
-
-        return this._price
-    }
-
-    set price(value) {
-
-        this._price = value
-    }
 }
